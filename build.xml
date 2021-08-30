@@ -23,6 +23,6 @@
  		</manifest>
  	</jar>
     <copy file="../BL-15A1_XRD.jar" toDir="${pluginsDir}" />
-    <copy file="prop.config" toDir="${pluginsDir}" />
+    <copy file="XRDProps.config" toDir="${pluginsDir}" />
   </target>
 </project>

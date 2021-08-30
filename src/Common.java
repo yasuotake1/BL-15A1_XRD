@@ -40,14 +40,14 @@ public class Common implements PlugIn {
 	public static List<Integer> arrAngles = new ArrayList<Integer>();
 	public static String defaultDir = "";
 
-	public static String PropPath = "plugins/BL-15A1_XRD/prop.config";
+	public static String PropPath = "plugins/BL-15A1_XRD/XRDProps.config";
 
 	public void run(String arg) {
-		// plugins ƒƒjƒ…[‚É‚Í•\¦‚³‚ê‚È‚¢ƒNƒ‰ƒX
+		// plugins ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½É‚Í•\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Nï¿½ï¿½ï¿½X
 	}
 
 	/**
-	 * İ’èƒtƒ@ƒCƒ‹“Ç‚İo‚µ
+	 * ï¿½İ’ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ç‚İoï¿½ï¿½
 	 * 
 	 * @return
 	 */
@@ -74,7 +74,7 @@ public class Common implements PlugIn {
 			target.defaultDir = prop.getProperty("defaultDir");
 
 		} catch (FileNotFoundException e) {
-			// ƒfƒtƒHƒ‹ƒg’l‚ğg—p‚·‚é
+			// ï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½lï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½
 			target.pX = pX;
 			target.pY = pY;
 			target.y0 = y0;
@@ -95,7 +95,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * İ’èƒtƒ@ƒCƒ‹‘‚«o‚µ
+	 * ï¿½İ’ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½
 	 * 
 	 * @param target
 	 */
@@ -120,10 +120,10 @@ public class Common implements PlugIn {
 		}
 	}
 
-	// PILATUSƒCƒ[ƒW‚ğƒCƒ[ƒWƒ“ƒOƒvƒŒ[ƒg(IP)‘œ‚É•ÏŠ·
+	// PILATUSï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½vï¿½ï¿½ï¿½[ï¿½g(IP)ï¿½ï¿½ï¿½É•ÏŠï¿½
 	/**
-	 * [calcIP] ƒJƒƒ‰Šp“_”‚ÆƒJƒƒ‰Šp‚ğw’è‚µA•¡”‚ÌPILATUSƒCƒ[ƒW (ƒJƒƒ‰–ÊX-ƒJƒƒ‰–ÊY)
-	 * ‚ğ‚Â‚È‚°‚ÄƒfƒoƒCEƒVƒFƒ‰[”z’uƒCƒ[ƒWƒ“ƒOƒvƒŒ[ƒg (IP) ‘œ (2ƒÆ-ƒJƒƒ‰–ÊY) ‚É•ÏŠ·
+	 * [calcIP] ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½pï¿½_ï¿½ï¿½ï¿½ÆƒJï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ï¿½wï¿½è‚µï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½PILATUSï¿½Cï¿½ï¿½ï¿½[ï¿½W (ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½X-ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Y)
+	 * ï¿½ï¿½ï¿½Â‚È‚ï¿½ï¿½Äƒfï¿½oï¿½Cï¿½Eï¿½Vï¿½Fï¿½ï¿½ï¿½[ï¿½zï¿½uï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Oï¿½vï¿½ï¿½ï¿½[ï¿½g (IP) ï¿½ï¿½ (2ï¿½ï¿½-ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Y) ï¿½É•ÏŠï¿½
 	 * 
 	 * @param imp
 	 * @param max2q
@@ -148,14 +148,14 @@ public class Common implements PlugIn {
 			for (int j = 0; j < h; j++) {
 
 				if (!prop.roundBool) {
-					// @@@@@<“à‘}’lg—p>‚±‚±‚©‚ç
+					// @@@@@<ï¿½ï¿½ï¿½}ï¿½lï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					imp_new.getProcessor().putPixelValue(i, j, imp.getProcessor().getInterpolatedValue(xi, j));// [A]
-					// @@@@@<“à‘}’lg—p>‚±‚±‚Ü‚Å
+					// @@@@@<ï¿½ï¿½ï¿½}ï¿½lï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½
 				} else {
-					// @@@@@<round()g—p>‚±‚±‚©‚ç
+					// @@@@@<round()ï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					 imp_new.getProcessor().putPixel(i, j,imp.getProcessor().getPixel((int)Math.round(xi), j));
 					//imp_new.getProcessor().putPixel(i, j, imp.getProcessor().getPixelInterpolated(xi, j));// [B]==round
-					// @@@@@<round()g—p>‚±‚±‚Ü‚Å
+					// @@@@@<round()ï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½
 				}
 
 			}
@@ -163,9 +163,9 @@ public class Common implements PlugIn {
 		return imp_new;
 	}
 
-	// IP‘œ‚©‚ç^‚Ì2ƒÆ‘œ‚É•ÏŠ·
+	// IPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½2ï¿½Æ‘ï¿½ï¿½É•ÏŠï¿½
 	/**
-	 * [calc2q] IP‘œ (2ƒÆ-ƒJƒƒ‰–ÊY) ‚©‚ç^‚Ì2ƒÆ‘œ (2ƒÆ-ƒJƒƒ‰–ÊY)‚É•ÏŠ·
+	 * [calc2q] IPï¿½ï¿½ (2ï¿½ï¿½-ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Y) ï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½2ï¿½Æ‘ï¿½ (2ï¿½ï¿½-ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Y)ï¿½É•ÏŠï¿½
 	 * 
 	 * @param imp
 	 * @param max2q
@@ -205,16 +205,16 @@ public class Common implements PlugIn {
 						imp_new.getProcessor().putPixelValue(j, i, Double.NaN);
 					} else {
 						if (!prop.roundBool) {
-							// @@@@@<“à‘}’lg—p>‚±‚±‚©‚ç
+							// @@@@@<ï¿½ï¿½ï¿½}ï¿½lï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							imp_new.getProcessor().putPixelValue(j, i, imp.getProcessor().getInterpolatedValue(xj, i)); // [A]
-							// @@@@@<“à‘}’lg—p>‚±‚±‚Ü‚Å
+							// @@@@@<ï¿½ï¿½ï¿½}ï¿½lï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½
 						} else {
-							// @@@@@<round()g—p>‚±‚±‚©‚ç
+							// @@@@@<round()ï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							imp_new.getProcessor().putPixel(j, i, imp.getProcessor().getPixel((int) (Math.round(xj)), i));
 							// imp_new.getProcessor().putPixel(j, i,
 							// imp.getProcessor().getPixelInterpolated(xj, i)); //
 							// [B]==round
-							// @@@@@<round()g—p>‚±‚±‚Ü‚Å
+							// @@@@@<round()ï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½
 						}
 					}
 				}
@@ -234,7 +234,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * [plot2q] 2ƒÆ‘œ‚ğƒJƒƒ‰–ÊY•ûŒü‚ÉÏ•ª‚µ‚Ä‰¡²2ƒÆ‚Ì1ŸŒ³ƒf[ƒ^‚ğ“¾‚é
+	 * [plot2q] 2ï¿½Æ‘ï¿½ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ÉÏ•ï¿½ï¿½ï¿½ï¿½Ä‰ï¿½ï¿½ï¿½2ï¿½Æ‚ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ğ“¾‚ï¿½
 	 * 
 	 * @param imp
 	 * @param min2q
@@ -257,7 +257,7 @@ public class Common implements PlugIn {
 		double[] profileX = new double[profileY.length];
 
 		for (int i = 0; i < profileY.length; i++) {
-			// Resultƒe[ƒuƒ‹‚ÉŠi”[
+			// Resultï¿½eï¿½[ï¿½uï¿½ï¿½ï¿½ÉŠiï¿½[
 			profileX[i] = min2q + i * step2q;
 			rt.setValue("2q", i, profileX[i]);
 			rt.setValue("Intensity", i, profileY[i]);
@@ -267,7 +267,7 @@ public class Common implements PlugIn {
 			pl.show();
 		}
 
-		// Resultƒe[ƒuƒ‹‚Ì“à—e‚ğAƒtƒ@ƒCƒ‹‚É‘‚«o‚µ
+		// Resultï¿½eï¿½[ï¿½uï¿½ï¿½ï¿½Ì“ï¿½ï¿½eï¿½ï¿½ï¿½Aï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½oï¿½ï¿½
 		try {
 			rt.saveAs(dir + nameStrip + "_vs2q.txt");
 		} catch (IOException e) {
@@ -279,7 +279,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * ƒ_ƒCƒAƒƒO‚ğ•\¦‚µAƒJƒƒ‰Šp‚ğw’è
+	 * ï¿½_ï¿½Cï¿½Aï¿½ï¿½ï¿½Oï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ï¿½wï¿½ï¿½
 	 * 
 	 * @return
 	 * @throws Exception
@@ -347,12 +347,12 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * <h1>‚PŸŒ³”z—ñ‚Ì—v‘f‚ğ”½“]‚·‚é</h1>
+	 * <h1>ï¿½Pï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½Ì—vï¿½fï¿½ğ”½“]ï¿½ï¿½ï¿½ï¿½</h1>
 	 * <p>
 	 * </p>
 	 * 
 	 * @param arr
-	 *            F ‘ÎÛ”z—ñ
+	 *            ï¿½F ï¿½ÎÛ”zï¿½ï¿½
 	 */
 	public static final void reverse(double[] arr) {
 		final int len = arr.length;
@@ -392,7 +392,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * •¶š—ñ”z—ñ‚©‚ç”’l”z—ñ‚ğì¬
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ñ‚©‚ç”ï¿½lï¿½zï¿½ï¿½ï¿½ï¿½ì¬
 	 * 
 	 * @param s
 	 * @return
@@ -407,7 +407,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * ƒfƒoƒbƒOƒƒO‚ğo—Í
+	 * ï¿½fï¿½oï¿½bï¿½Oï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½oï¿½ï¿½
 	 * 
 	 * @param s
 	 */
@@ -419,7 +419,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * ƒƒO‚ÉƒVƒXƒeƒ€•ª•b‚ğo—Í
+	 * ï¿½ï¿½ï¿½Oï¿½ÉƒVï¿½Xï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½oï¿½ï¿½
 	 * 
 	 * @param str
 	 */
@@ -433,7 +433,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * ƒtƒ@ƒCƒ‹ƒ`ƒFƒbƒNiTIFF/32bpp)
+	 * ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½iTIFF/32bpp)
 	 * 
 	 * @param filepath
 	 * @return
@@ -443,22 +443,22 @@ public class Common implements PlugIn {
 		Pattern p = Pattern.compile(".*[.]tif$");
 		Matcher m = p.matcher(filepath);
 
-		// ‘I‘ğ‚µ‚½ƒtƒ@ƒCƒ‹‚ÌŠg’£q‚ªtif‚Å‚È‚¯‚ê‚ÎƒGƒ‰[‚Æ•\¦‚µ‚ÄI—¹
+		// ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ÌŠgï¿½ï¿½ï¿½qï¿½ï¿½tifï¿½Å‚È‚ï¿½ï¿½ï¿½ÎƒGï¿½ï¿½ï¿½[ï¿½Æ•\ï¿½ï¿½ï¿½ï¿½ï¿½ÄIï¿½ï¿½
 		if (!m.find()) {
 			IJ.error("Invalid file type.");
 			return null;
 		}
 
 		File f = new File(filepath);
-		// ‘I‘ğ‚µ‚½ƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚È‚¯‚ê‚ÎƒGƒ‰[‚Æ•\¦‚µ‚ÄI—¹
+		// ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎƒGï¿½ï¿½ï¿½[ï¿½Æ•\ï¿½ï¿½ï¿½ï¿½ï¿½ÄIï¿½ï¿½
 		if (!f.exists()) {
 			IJ.error("File[" + filepath + "] does not exist.");
 			return null;
 		}
 
-		// ‰æ‘œƒtƒ@ƒCƒ‹‚ğImagePlus‚É•ÏŠ·
+		// ï¿½æ‘œï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ImagePlusï¿½É•ÏŠï¿½
 		ImagePlus imp = new ImagePlus(filepath);
-		// ‘I‘ğ‚µ‚½ƒtƒ@ƒCƒ‹‚ÌBPP(F[“xFBit Per Pixel)‚ª32‚Å‚È‚¯‚ê‚ÎƒGƒ‰[‚Æ•\¦‚µ‚ÄI—¹
+		// ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½BPP(ï¿½Fï¿½[ï¿½xï¿½FBit Per Pixel)ï¿½ï¿½32ï¿½Å‚È‚ï¿½ï¿½ï¿½ÎƒGï¿½ï¿½ï¿½[ï¿½Æ•\ï¿½ï¿½ï¿½ï¿½ï¿½ÄIï¿½ï¿½
 		if (imp.getBitDepth() != 32) {
 			IJ.error("Invalid file type.");
 			return null;
@@ -468,7 +468,7 @@ public class Common implements PlugIn {
 }
 
 /**
- * ƒtƒBƒ‹ƒ^ƒŠƒ“ƒOƒNƒ‰ƒX(_nnnnn.tif)
+ * ï¿½tï¿½Bï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Nï¿½ï¿½ï¿½X(_nnnnn.tif)
  */
 class TifFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
@@ -483,7 +483,7 @@ class TifFilter implements FilenameFilter {
 }
 
 /**
- * ƒtƒBƒ‹ƒ^ƒŠƒ“ƒOƒNƒ‰ƒX(_nnnnnnorm.tif)
+ * ï¿½tï¿½Bï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Nï¿½ï¿½ï¿½X(_nnnnnnorm.tif)
  */
 class NormalizeFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
@@ -498,7 +498,7 @@ class NormalizeFilter implements FilenameFilter {
 }
 
 /**
- * ƒtƒBƒ‹ƒ^ƒŠƒ“ƒOƒNƒ‰ƒX(_nnnnnstitch.tif)
+ * ï¿½tï¿½Bï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Nï¿½ï¿½ï¿½X(_nnnnnstitch.tif)
  */
 class StitchFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
@@ -512,7 +512,7 @@ class StitchFilter implements FilenameFilter {
 	}
 }
 
-/* 2016.08.12 •À—ñÀs•s‰Â‚Ì‚½‚ßAg—p‹Ö~ */
+/* 2016.08.12 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½sï¿½Â‚Ì‚ï¿½ï¿½ßAï¿½gï¿½pï¿½Ö~ */
 /*class calc2q_Sub implements Callable<String> {
 
 	private int i;
@@ -544,17 +544,17 @@ class StitchFilter implements FilenameFilter {
 					/ step2q;
 
 			if (!prop.roundBool) {
-				// @@@@@<“à‘}’lg—p>‚±‚±‚©‚ç
+				// @@@@@<ï¿½ï¿½ï¿½}ï¿½lï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				imp_new.getProcessor().putPixelValue(j, i, imp.getProcessor().getInterpolatedValue(xj, i)); // [A]
-				// @@@@@<“à‘}’lg—p>‚±‚±‚Ü‚Å
+				// @@@@@<ï¿½ï¿½ï¿½}ï¿½lï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½
 
 			} else {
-				// @@@@@<round()g—p>‚±‚±‚©‚ç
+				// @@@@@<round()ï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				imp_new.getProcessor().putPixel(j, i, imp.getProcessor().getPixel((int) (Math.round(xj)), i));
 				// imp_new.getProcessor().putPixel(j, i,
 				// imp.getProcessor().getPixelInterpolated(xj, i)); //
 				// [B]==round
-				// @@@@@<round()g—p>‚±‚±‚Ü‚Å
+				// @@@@@<round()ï¿½gï¿½p>ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½
 			}
 				//Common.debug(""+j+","+i+","+imp_new.getProcessor().getInterpolatedValue(j, i));
 		} // for(j)
