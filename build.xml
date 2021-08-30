@@ -15,14 +15,14 @@
 	</echo>
 </target>
  <target name="compress" depends="" description="generate the distribution">
- 	<jar jarfile="BL-15A1_XRD.jar">
+ 	<jar jarfile="../BL-15A1_XRD.jar">
  		<fileset dir="." includes="plugins.config" />
 		<fileset dir="${build}" includes="**/*.*" />
  		<manifest>
  		 	 	      <attribute name="Built-By" value="${user.name}"/>
  		</manifest>
  	</jar>
-    <copy file="BL-15A1_XRD.jar" toDir="${pluginsDir}" />
+    <copy file="../BL-15A1_XRD.jar" toDir="${pluginsDir}" />
     <copy file="prop.config" toDir="${pluginsDir}" />
   </target>
 </project>
