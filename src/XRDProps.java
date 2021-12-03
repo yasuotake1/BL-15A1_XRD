@@ -15,6 +15,5 @@ public class XRDProps implements PlugIn{
 	public String defaultDir;
 
 	public void run(String arg){
-		// plugins メニューには表示されないクラス		
 	}
 }
