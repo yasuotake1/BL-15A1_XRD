@@ -25,7 +25,7 @@ public class Load_single_PILATUS_image implements PlugIn {
 		ImagePlus imp = Common.CheckTiff32BPP(filepath);
 		if(imp == null )return;
 
-		// İ’è’l‚ğæ“¾
+		// ï¿½İ’ï¿½lï¿½ï¿½ï¿½æ“¾
 		prop.defaultDir = dir;
 		Common.WriteProps(prop);
 		
