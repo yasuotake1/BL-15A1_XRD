@@ -70,7 +70,8 @@ public class Common implements PlugIn {
 			target.roundBool = Boolean.parseBoolean(prop.getProperty("roundBool"));
 			target.cacheBool = Boolean.parseBoolean(prop.getProperty("cacheBool"));
 			target.debugBool = Boolean.parseBoolean(prop.getProperty("debugBool"));
-			target.arrAngles = Arrays.asList(prop.getProperty("arrAngles").replaceAll("[ \\[\\]]", "").split(",")).stream().mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
+			target.arrAngles = Arrays.asList(prop.getProperty("arrAngles").replaceAll("[ \\[\\]]", "").split(","))
+					.stream().mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
 			target.defaultDir = prop.getProperty("defaultDir");
 
 		} catch (FileNotFoundException e) {
@@ -122,8 +123,9 @@ public class Common implements PlugIn {
 
 	// PILATUS�C���[�W���C���[�W���O�v���[�g(IP)���ɕϊ�
 	/**
-	 * [calcIP] �J�����p�_���ƃJ�����p���w�肵�A������PILATUS�C���[�W (�J������X-�J������Y)
-	 * ���Ȃ��ăf�o�C�E�V�F���[�z�u�C���[�W���O�v���[�g (IP) �� (2��-�J������Y) �ɕϊ�
+	 * [calcIP] �J�����p�_���ƃJ�����p���w�肵�A������PILATUS�C���[�W
+	 * (�J������X-�J������Y) ���Ȃ��ăf�o�C�E�V�F���[�z�u�C���[�W���O�v���[�g (IP) ��
+	 * (2��-�J������Y) �ɕϊ�
 	 * 
 	 * @param imp
 	 * @param max2q
@@ -135,14 +137,16 @@ public class Common implements PlugIn {
 		ImagePlus imp_new = imp.duplicate();
 		int w = imp.getProcessor().getWidth();
 		int h = imp.getProcessor().getHeight();
-		
+
 		for (int i = 0; i < w; i++) {
 
 			double xi;
-			if(prop.directionInt % 2 == 0) {
-				xi = w / 2 + prop.cDist * Math.tan((getMin2q(angle, w, prop) - angle + i * step2q) / 180 * Math.PI) / prop.pX;
+			if (prop.directionInt % 2 == 0) {
+				xi = w / 2 + prop.cDist * Math.tan((getMin2q(angle, w, prop) - angle + i * step2q) / 180 * Math.PI)
+						/ prop.pX;
 			} else {
-				xi = w / 2 - prop.cDist * Math.tan((getMax2q(angle, w, prop) - angle - i * step2q) / 180 * Math.PI) / prop.pX;				
+				xi = w / 2 - prop.cDist * Math.tan((getMax2q(angle, w, prop) - angle - i * step2q) / 180 * Math.PI)
+						/ prop.pX;
 			}
 
 			for (int j = 0; j < h; j++) {
@@ -153,8 +157,9 @@ public class Common implements PlugIn {
 					// @@@@@<���}�l�g�p>�����܂�
 				} else {
 					// @@@@@<round()�g�p>��������
-					 imp_new.getProcessor().putPixel(i, j,imp.getProcessor().getPixel((int)Math.round(xi), j));
-					//imp_new.getProcessor().putPixel(i, j, imp.getProcessor().getPixelInterpolated(xi, j));// [B]==round
+					imp_new.getProcessor().putPixel(i, j, imp.getProcessor().getPixel((int) Math.round(xi), j));
+					// imp_new.getProcessor().putPixel(i, j,
+					// imp.getProcessor().getPixelInterpolated(xi, j));// [B]==round
 					// @@@@@<round()�g�p>�����܂�
 				}
 
@@ -178,12 +183,12 @@ public class Common implements PlugIn {
 
 		int w = imp_new.getProcessor().getWidth();
 		int h = imp_new.getProcessor().getHeight();
-		
+
 //		ExecutorService threadPool = Executors.newSingleThreadExecutor();
 //		ExecutorService threadPool = Executors.newCachedThreadPool();
 //		ExecutorService threadPool = Executors.newFixedThreadPool (8);
 
-		//Common.debugTiff(imp, "calc2q_pre");
+		// Common.debugTiff(imp, "calc2q_pre");
 		double y;
 		double j2qRad;
 		double xj;
@@ -196,12 +201,18 @@ public class Common implements PlugIn {
 				if (Math.abs(y) > Math.abs(j2qRad * prop.cDist)) {
 					imp_new.getProcessor().putPixelValue(j, i, Double.NaN);
 				} else {
-					if(prop.directionInt % 2 == 0) {
-						xj = j - prop.cDist * (j2qRad - Math.signum(j2qRad) * Math.acos(Math.sqrt(prop.cDist * prop.cDist + y * y) * Math.cos(j2qRad) / prop.cDist)) / prop.pX;
+					if (prop.directionInt % 2 == 0) {
+						xj = j - prop.cDist
+								* (j2qRad - Math.signum(j2qRad) * Math.acos(
+										Math.sqrt(prop.cDist * prop.cDist + y * y) * Math.cos(j2qRad) / prop.cDist))
+								/ prop.pX;
 					} else {
-						xj = w - j + prop.cDist * (j2qRad - Math.signum(j2qRad) * Math.acos(Math.sqrt(prop.cDist * prop.cDist + y * y) * Math.cos(j2qRad) / prop.cDist)) / prop.pX;
+						xj = w - j
+								+ prop.cDist * (j2qRad - Math.signum(j2qRad) * Math.acos(
+										Math.sqrt(prop.cDist * prop.cDist + y * y) * Math.cos(j2qRad) / prop.cDist))
+										/ prop.pX;
 					}
-					if(xj < 0) {
+					if (xj < 0) {
 						imp_new.getProcessor().putPixelValue(j, i, Double.NaN);
 					} else {
 						if (!prop.roundBool) {
@@ -210,7 +221,8 @@ public class Common implements PlugIn {
 							// @@@@@<���}�l�g�p>�����܂�
 						} else {
 							// @@@@@<round()�g�p>��������
-							imp_new.getProcessor().putPixel(j, i, imp.getProcessor().getPixel((int) (Math.round(xj)), i));
+							imp_new.getProcessor().putPixel(j, i,
+									imp.getProcessor().getPixel((int) (Math.round(xj)), i));
 							// imp_new.getProcessor().putPixel(j, i,
 							// imp.getProcessor().getPixelInterpolated(xj, i)); //
 							// [B]==round
@@ -218,12 +230,13 @@ public class Common implements PlugIn {
 						}
 					}
 				}
-					//Common.debug(""+j+","+i+","+imp_new.getProcessor().getInterpolatedValue(j, i));
+				// Common.debug(""+j+","+i+","+imp_new.getProcessor().getInterpolatedValue(j,
+				// i));
 			} // for(j)
 
 		}
 //		threadPool.shutdown();
-		//Common.debugTiff(imp_new, "calc2q");
+		// Common.debugTiff(imp_new, "calc2q");
 
 //		for (int i = 0; i < h; i++) {
 //			for (int j = 0; j < w; j++) {
@@ -234,7 +247,6 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * [plot2q] 2�Ƒ����J������Y�����ɐϕ����ĉ���2�Ƃ�1�����f�[�^�𓾂�
 	 * 
 	 * @param imp
 	 * @param min2q
@@ -246,28 +258,22 @@ public class Common implements PlugIn {
 	public static void plot2q(ImagePlus imp, double min2q, double step2q, String dir, String nameStrip, boolean bShow) {
 		ResultsTable rt = ResultsTable.getResultsTable();
 		rt.reset();
-//imp.show();
-		imp.setRoi(0,0,imp.getWidth(), imp.getHeight());
+		imp.setRoi(0, 0, imp.getWidth(), imp.getHeight());
 		ProfilePlot pp = new ProfilePlot(imp);
-//Common.debugTiff(imp, "plot2q");
 		double[] profileY = pp.getProfile();
-
-//		reverse(profileY);
-		
 		double[] profileX = new double[profileY.length];
 
 		for (int i = 0; i < profileY.length; i++) {
-			// Result�e�[�u���Ɋi�[
 			profileX[i] = min2q + i * step2q;
 			rt.setValue("2q", i, profileX[i]);
 			rt.setValue("Intensity", i, profileY[i]);
 		}
 		if (bShow) {
-			Plot pl = new Plot(nameStrip + "_vs2q", "2q (deg.)", "Intensity", profileX, profileY);
+			Plot pl = new Plot(nameStrip + "_vs2q", "2q (deg.)", "Intensity");
+			pl.addPoints(profileX, profileY, Plot.LINE);
 			pl.show();
 		}
 
-		// Result�e�[�u���̓��e���A�t�@�C���ɏ����o��
 		try {
 			rt.saveAs(dir + nameStrip + "_vs2q.txt");
 		} catch (IOException e) {
@@ -279,7 +285,6 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * �_�C�A���O��\�����A�J�����p���w��
 	 * 
 	 * @return
 	 * @throws Exception
@@ -289,13 +294,13 @@ public class Common implements PlugIn {
 		GenericDialog gd0 = new GenericDialog("Camera Angle");
 		gd0.addNumericField("Camera angle: ", prop.cAngle, 2, 5, "degree");
 		gd0.showDialog();
-		
-		if(gd0.wasCanceled())
+
+		if (gd0.wasCanceled())
 			throw new Exception("Image loading was canceled.");
-		
-		return (double)gd0.getNextNumber();
+
+		return (double) gd0.getNextNumber();
 	}
-	
+
 	public static List<Integer> getStitchAngles() throws Exception {
 		XRDProps prop = ReadProps();
 		GenericDialog gd1 = new GenericDialog("Stitch PILATUS Images");
@@ -318,11 +323,11 @@ public class Common implements PlugIn {
 
 		for (int i = 0; i < numImages; i++) {
 			String strLabel = "Camera angle of image #" + String.valueOf(i + 1) + ": ";
-			if(i < prop.arrAngles.size())
+			if (i < prop.arrAngles.size())
 				gd2.addNumericField(strLabel, prop.arrAngles.get(i), 2, 5, "degree");
 			else
 				gd2.addNumericField(strLabel, prop.cAngle, 2, 5, "degree");
-			
+
 		}
 		gd2.addMessage(strGuide);
 		gd2.showDialog();
@@ -332,7 +337,7 @@ public class Common implements PlugIn {
 
 		List<Integer> arrAngles = new ArrayList<Integer>(numImages);
 		for (int i = 0; i < numImages; i++) {
-			arrAngles.add((int)gd2.getNextNumber());
+			arrAngles.add((int) gd2.getNextNumber());
 		}
 
 		for (int i = 0; i < numImages - 1; i++) {
@@ -351,8 +356,7 @@ public class Common implements PlugIn {
 	 * <p>
 	 * </p>
 	 * 
-	 * @param arr
-	 *            �F �Ώ۔z��
+	 * @param arr �F �Ώ۔z��
 	 */
 	public static final void reverse(double[] arr) {
 		final int len = arr.length;
@@ -382,7 +386,7 @@ public class Common implements PlugIn {
 			profile[i] /= counts[i];
 		return profile;
 	}
-	
+
 	public static double getMin2q(double cameraAngle, int width, XRDProps prop) {
 		return cameraAngle - Math.atan(prop.pX * (width - 1) / 2 / prop.cDist) / Math.PI * 180;
 	}
@@ -419,7 +423,6 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * ���O�ɃV�X�e�������b���o��
 	 * 
 	 * @param str
 	 */
@@ -428,8 +431,7 @@ public class Common implements PlugIn {
 		Date now = new Date();
 		DateFormat df = new SimpleDateFormat("HH:mm:ss");
 
-		IJ.log(str + " : [" + ste.getClassName() + "] " +df.format(now));
-//		IJ.log(df.format(now));
+		IJ.log(str + " : [" + ste.getClassName() + "] " + df.format(now));
 	}
 
 	/**
@@ -513,55 +515,44 @@ class StitchFilter implements FilenameFilter {
 }
 
 /* 2016.08.12 ������s�s�̂��߁A�g�p�֎~ */
-/*class calc2q_Sub implements Callable<String> {
-
-	private int i;
-	private double w, max2q;
-	private double step2q;
-	private ImagePlus imp_new;
-	private ImagePlus imp;
-
-	private XRDProps prop;
-
-	public calc2q_Sub(int _i, double _w, double _max2q, double _step2q, ImagePlus _imp_new, ImagePlus _imp) {
-
-		this.i = _i;
-		this.w = _w;
-		this.max2q = _max2q;
-		this.step2q = _step2q;
-		this.imp_new = _imp_new;
-		this.imp = _imp;
-
-		this.prop = Common.ReadProps();
-	}
-
-	public String call() {
-		double yL2 = (i - prop.y0) * prop.pY * (i - prop.y0) * prop.pY / prop.cDist / prop.cDist;
-
-		for (int j = 0; j < w; j++) {
-			double xj = (max2q
-					- Math.acos(Math.cos((max2q - j * step2q) / 180 * Math.PI) * Math.sqrt(1 + yL2)) / Math.PI * 180)
-					/ step2q;
-
-			if (!prop.roundBool) {
-				// @@@@@<���}�l�g�p>��������
-				imp_new.getProcessor().putPixelValue(j, i, imp.getProcessor().getInterpolatedValue(xj, i)); // [A]
-				// @@@@@<���}�l�g�p>�����܂�
-
-			} else {
-				// @@@@@<round()�g�p>��������
-				imp_new.getProcessor().putPixel(j, i, imp.getProcessor().getPixel((int) (Math.round(xj)), i));
-				// imp_new.getProcessor().putPixel(j, i,
-				// imp.getProcessor().getPixelInterpolated(xj, i)); //
-				// [B]==round
-				// @@@@@<round()�g�p>�����܂�
-			}
-				//Common.debug(""+j+","+i+","+imp_new.getProcessor().getInterpolatedValue(j, i));
-		} // for(j)
-		//imp_new.getProcessor().putPixelValue(1, 62, imp.getProcessor().getInterpolatedValue(1, 69)); // [A]
-		//imp_new.getProcessor().putPixelValue(1, 62, 1915.5434208759418); // [A]
-		return "";
-
-	}
-}
-*/
+/*
+ * class calc2q_Sub implements Callable<String> {
+ * 
+ * private int i; private double w, max2q; private double step2q; private
+ * ImagePlus imp_new; private ImagePlus imp;
+ * 
+ * private XRDProps prop;
+ * 
+ * public calc2q_Sub(int _i, double _w, double _max2q, double _step2q, ImagePlus
+ * _imp_new, ImagePlus _imp) {
+ * 
+ * this.i = _i; this.w = _w; this.max2q = _max2q; this.step2q = _step2q;
+ * this.imp_new = _imp_new; this.imp = _imp;
+ * 
+ * this.prop = Common.ReadProps(); }
+ * 
+ * public String call() { double yL2 = (i - prop.y0) * prop.pY * (i - prop.y0) *
+ * prop.pY / prop.cDist / prop.cDist;
+ * 
+ * for (int j = 0; j < w; j++) { double xj = (max2q - Math.acos(Math.cos((max2q
+ * - j * step2q) / 180 * Math.PI) * Math.sqrt(1 + yL2)) / Math.PI * 180) /
+ * step2q;
+ * 
+ * if (!prop.roundBool) { // @@@@@<���}�l�g�p>��������
+ * imp_new.getProcessor().putPixelValue(j, i,
+ * imp.getProcessor().getInterpolatedValue(xj, i)); // [A]
+ * // @@@@@<���}�l�g�p>�����܂�
+ * 
+ * } else { // @@@@@<round()�g�p>�������� imp_new.getProcessor().putPixel(j, i,
+ * imp.getProcessor().getPixel((int) (Math.round(xj)), i)); //
+ * imp_new.getProcessor().putPixel(j, i, //
+ * imp.getProcessor().getPixelInterpolated(xj, i)); // // [B]==round
+ * // @@@@@<round()�g�p>�����܂� }
+ * //Common.debug(""+j+","+i+","+imp_new.getProcessor().getInterpolatedValue(j,
+ * i)); } // for(j) //imp_new.getProcessor().putPixelValue(1, 62,
+ * imp.getProcessor().getInterpolatedValue(1, 69)); // [A]
+ * //imp_new.getProcessor().putPixelValue(1, 62, 1915.5434208759418); // [A]
+ * return "";
+ * 
+ * } }
+ */
