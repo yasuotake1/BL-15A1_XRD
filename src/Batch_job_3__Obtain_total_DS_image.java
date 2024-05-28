@@ -24,7 +24,7 @@ public class Batch_job_3__Obtain_total_DS_image implements PlugIn {
 
 	public void run(String arg) {
 
-		XRDProps prop = Common.ReadProps();
+		XRDProps prop = XRDCommon.ReadProps();
 
 		DirectoryChooser dc = new DirectoryChooser("Choose directory for stitched images...");
 		if(dc.getDirectory() == null) return;
@@ -100,8 +100,8 @@ public class Batch_job_3__Obtain_total_DS_image implements PlugIn {
 		imp_total.setTitle(strPrefix + "_total.tif");
 		imp_total.show();
 
-		ImagePlus imp2q = Common.calc2q(imp_total, globalMax2q, globalStep2q, prop);
-		Common.plot2q(imp2q, globalMin2q, globalStep2q, dirImg + "total" + File.separator, strPrefix + "_total", true);
+		ImagePlus imp2q = XRDCommon.calc2q(imp_total, globalMax2q, globalStep2q, prop);
+		XRDCommon.plot2q(imp2q, globalMin2q, globalStep2q, dirImg + "total" + File.separator, strPrefix + "_total", true);
 
 		IJ.showStatus("Finished image integration.");
 

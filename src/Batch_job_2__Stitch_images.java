@@ -23,7 +23,7 @@ public class Batch_job_2__Stitch_images implements PlugIn {
 
 	public void run(String arg) {
 		
-		XRDProps prop = Common.ReadProps();
+		XRDProps prop = XRDCommon.ReadProps();
 		
 		DirectoryChooser dc = new DirectoryChooser("Choose directory for normalized images...");
 		if(dc.getDirectory() == null) return;
@@ -43,7 +43,7 @@ public class Batch_job_2__Stitch_images implements PlugIn {
 
 		List<Integer> arrAngles;
 		try {
-			arrAngles = Common.getStitchAngles();
+			arrAngles = XRDCommon.getStitchAngles();
 			if(arrAngles.size() == 0) return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,7 +65,6 @@ public class Batch_job_2__Stitch_images implements PlugIn {
 		gd1.showDialog();
 		if(gd1.wasCanceled())return;
 
-		// 入力値で再設定
 		strPrefix = gd1.getNextString();
 		for(int i=0; i<arrAngles.size(); i++) {
 			arrStartIdx[i] = (int)gd1.getNextNumber();
@@ -126,7 +125,7 @@ public class Batch_job_2__Stitch_images implements PlugIn {
 				
 				step2q = (arrMax2q[j] - arrMin2q[j]) / w;
 				
-				arrIdIP[j] = Common.calcIP(impRaw, step2q, angle, prop);
+				arrIdIP[j] = XRDCommon.calcIP(impRaw, step2q, angle, prop);
 
 				if(j==0) {
 					globalMin2q = arrMin2q[j];
@@ -155,22 +154,18 @@ public class Batch_job_2__Stitch_images implements PlugIn {
 				double xj = (arrMax2q[idxToUse] - (globalMax2q - globalStep2q * j)) / step2q;
 				for(int k=0; k<h_new; k++) {
 					if(!prop.roundBool){
-						// @@@@@<内挿値使用>ここから 
 						imp_sti.getProcessor().putPixelValue(j,k,arrIdIP[idxToUse].getProcessor().getInterpolatedValue(xj, k)); // [A]
-						// @@@@@<内挿値使用>ここまで
 					}else{
-						// @@@@@<round()使用>ここから
 						imp_sti.getProcessor().putPixel(j,k,arrIdIP[idxToUse].getProcessor().getPixel((int)Math.round(xj), k));
 						//imp_sti.getProcessor().putPixel(j,k,arrIdIP[idxToUse].getProcessor().getPixelInterpolated(xj, k)); // [B]
-						// @@@@@<round()使用>ここまで					
 					}
 				}
 			}
 			new FileSaver(imp_sti).saveAsTiff(dirImg + "stitched" + File.separator + strName0 + ".tif");
 
-			ImagePlus imp2q = Common.calc2q(imp_sti, globalMax2q, globalStep2q, prop);
+			ImagePlus imp2q = XRDCommon.calc2q(imp_sti, globalMax2q, globalStep2q, prop);
 
-			Common.plot2q(imp2q, globalMin2q, globalStep2q, dirImg + "stitched" + File.separator, strName0, false);
+			XRDCommon.plot2q(imp2q, globalMin2q, globalStep2q, dirImg + "stitched" + File.separator, strName0, false);
 
 			IJ.showProgress((i+1), NumImg);
 			IJ.showStatus(strName0 + ".tif");

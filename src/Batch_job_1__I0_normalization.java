@@ -56,16 +56,14 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 		String[] headerData = null;
 		List<int[]> mapData = new ArrayList<int[]>();
 		try {
-			// ファイルを読み込む
 			BufferedReader br = new BufferedReader(new FileReader(new File(od.getPath())));
-			// 読み込んだファイルを１行ずつ処理する
 			String line;
 			int i_line = 0;
 			while((line = br.readLine()) != null ){
 				if (i_line == 0) {
 					headerData = line.replaceAll(" ", "").split(",");
 				} else {
-					int[] data_str = Common.parseInts(line.replaceAll(" ", "").split(","));
+					int[] data_str = XRDCommon.parseInts(line.replaceAll(" ", "").split(","));
 					mapData.add(data_str);
 				}
 				i_line++;
@@ -105,7 +103,7 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 			}
 		}
 
-		XRDProps prop = Common.ReadProps();
+		XRDProps prop = XRDCommon.ReadProps();
 		if(prop.cacheBool){
 			for(int n=0;n<listAll.length;n++){
 				ImagePlus work = new ImagePlus(listAll[n].getPath());

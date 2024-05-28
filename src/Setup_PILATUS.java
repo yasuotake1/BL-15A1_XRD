@@ -5,7 +5,7 @@ public class Setup_PILATUS implements PlugIn {
 
 	public void run(String arg) {
 		
-		XRDProps readProps = Common.ReadProps();
+		XRDProps readProps = XRDCommon.ReadProps();
 		
 		GenericDialog gd = new GenericDialog("PILATUS Setup");
 		
@@ -42,7 +42,7 @@ public class Setup_PILATUS implements PlugIn {
 		target.arrAngles = readProps.arrAngles;
 		target.defaultDir = readProps.defaultDir;
 		
-		Common.WriteProps(target);
+		XRDCommon.WriteProps(target);
 	}
 
 }

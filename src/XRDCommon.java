@@ -26,7 +26,8 @@ import ij.measure.ResultsTable;
 import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
 
-public class Common implements PlugIn {
+
+public class XRDCommon implements PlugIn {
 
 	public static float pX = 0.000172F;
 	public static float pY = 0.000172F;
@@ -43,13 +44,10 @@ public class Common implements PlugIn {
 	public static String PropPath = "plugins/BL-15A1_XRD/XRDProps.config";
 
 	public void run(String arg) {
-		// plugins ���j���[�ɂ͕\������Ȃ��N���X
 	}
 
 	/**
-	 * �ݒ�t�@�C���ǂݏo��
-	 * 
-	 * @return
+	 * @return XRDProps object that contains parameters.
 	 */
 	public static XRDProps ReadProps() {
 		Properties prop = new Properties();
@@ -75,7 +73,6 @@ public class Common implements PlugIn {
 			target.defaultDir = prop.getProperty("defaultDir");
 
 		} catch (FileNotFoundException e) {
-			// �f�t�H���g�l���g�p����
 			target.pX = pX;
 			target.pY = pY;
 			target.y0 = y0;
@@ -96,9 +93,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * �ݒ�t�@�C�������o��
-	 * 
-	 * @param target
+	 * @param target XRDProps object that contains to be written.
 	 */
 	public static void WriteProps(XRDProps target) {
 		Properties prop = new Properties();
@@ -115,22 +110,19 @@ public class Common implements PlugIn {
 		prop.setProperty("arrAngles", Arrays.toString(target.arrAngles.toArray()));
 		prop.setProperty("defaultDir", target.defaultDir);
 		try {
-			Prefs.savePrefs(prop, Common.PropPath);
+			Prefs.savePrefs(prop, XRDCommon.PropPath);
 		} catch (IOException e) {
 			IJ.error("Failed to write properties.");
 		}
 	}
 
-	// PILATUS�C���[�W���C���[�W���O�v���[�g(IP)���ɕϊ�
+
 	/**
-	 * [calcIP] �J�����p�_���ƃJ�����p���w�肵�A������PILATUS�C���[�W
-	 * (�J������X-�J������Y) ���Ȃ��ăf�o�C�E�V�F���[�z�u�C���[�W���O�v���[�g (IP) ��
-	 * (2��-�J������Y) �ɕϊ�
-	 * 
-	 * @param imp
-	 * @param max2q
-	 * @param step2q
-	 * @return
+	 * @param imp ImagePlus of the flat detector image.
+	 * @param step2q Step size in degree to calculate imaging plate pattern.
+	 * @param angle Center camera angle.
+	 * @param prop XRDProps object that contains other parameters.
+	 * @return ImagePlus of imaging plate pattern.
 	 */
 	public static ImagePlus calcIP(ImagePlus imp, double step2q, double angle, XRDProps prop) {
 
@@ -152,15 +144,11 @@ public class Common implements PlugIn {
 			for (int j = 0; j < h; j++) {
 
 				if (!prop.roundBool) {
-					// @@@@@<���}�l�g�p>��������
 					imp_new.getProcessor().putPixelValue(i, j, imp.getProcessor().getInterpolatedValue(xi, j));// [A]
-					// @@@@@<���}�l�g�p>�����܂�
 				} else {
-					// @@@@@<round()�g�p>��������
 					imp_new.getProcessor().putPixel(i, j, imp.getProcessor().getPixel((int) Math.round(xi), j));
 					// imp_new.getProcessor().putPixel(i, j,
 					// imp.getProcessor().getPixelInterpolated(xi, j));// [B]==round
-					// @@@@@<round()�g�p>�����܂�
 				}
 
 			}
@@ -168,13 +156,12 @@ public class Common implements PlugIn {
 		return imp_new;
 	}
 
-	// IP������^��2�Ƒ��ɕϊ�
+
 	/**
-	 * [calc2q] IP�� (2��-�J������Y) ����^��2�Ƒ� (2��-�J������Y)�ɕϊ�
-	 * 
-	 * @param imp
-	 * @param max2q
-	 * @param step2q
+	 * @param imp ImagePlus of imaging plate pattern.
+	 * @param min2q Minimum two-theta angle in degree.
+	 * @param step2q Step size in degree.
+	 * @param prop XRDProps object that contains other parameters.
 	 * @return
 	 */
 	public static ImagePlus calc2q(ImagePlus imp, double min2q, double step2q, XRDProps prop) {
@@ -216,17 +203,13 @@ public class Common implements PlugIn {
 						imp_new.getProcessor().putPixelValue(j, i, Double.NaN);
 					} else {
 						if (!prop.roundBool) {
-							// @@@@@<���}�l�g�p>��������
 							imp_new.getProcessor().putPixelValue(j, i, imp.getProcessor().getInterpolatedValue(xj, i)); // [A]
-							// @@@@@<���}�l�g�p>�����܂�
 						} else {
-							// @@@@@<round()�g�p>��������
 							imp_new.getProcessor().putPixel(j, i,
 									imp.getProcessor().getPixel((int) (Math.round(xj)), i));
 							// imp_new.getProcessor().putPixel(j, i,
 							// imp.getProcessor().getPixelInterpolated(xj, i)); //
 							// [B]==round
-							// @@@@@<round()�g�p>�����܂�
 						}
 					}
 				}
@@ -247,13 +230,12 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * 
 	 * @param imp
 	 * @param min2q
 	 * @param step2q
 	 * @param dir
-	 * @param nameStrip
-	 * @param bShow
+	 * @param nameStrip Stripped file name.
+	 * @param bShow Boolean if the plot window is shown.
 	 */
 	public static void plot2q(ImagePlus imp, double min2q, double step2q, String dir, String nameStrip, boolean bShow) {
 		ResultsTable rt = ResultsTable.getResultsTable();
@@ -285,7 +267,6 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * 
 	 * @return
 	 * @throws Exception
 	 */
@@ -352,11 +333,7 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * <h1>�P�����z��̗v�f�𔽓]����</h1>
-	 * <p>
-	 * </p>
-	 * 
-	 * @param arr �F �Ώ۔z��
+	 * @param arr array of double to be reversed.
 	 */
 	public static final void reverse(double[] arr) {
 		final int len = arr.length;
@@ -396,8 +373,6 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * ������z�񂩂琔�l�z����쐬
-	 * 
 	 * @param s
 	 * @return
 	 */
@@ -411,8 +386,6 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * �f�o�b�O���O���o��
-	 * 
 	 * @param s
 	 */
 	public static void debug(String s) {
@@ -423,7 +396,6 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * 
 	 * @param str
 	 */
 	public static void log(String str) {
@@ -435,32 +407,26 @@ public class Common implements PlugIn {
 	}
 
 	/**
-	 * �t�@�C���`�F�b�N�iTIFF/32bpp)
-	 * 
 	 * @param filepath
-	 * @return
+	 * @return ImagePlus loaded from filepath or null if it is not a 32-bit Tiff file or does not exist.
 	 */
 	public static ImagePlus CheckTiff32BPP(String filepath) {
 
 		Pattern p = Pattern.compile(".*[.]tif$");
 		Matcher m = p.matcher(filepath);
 
-		// �I�������t�@�C���̊g���q��tif�łȂ���΃G���[�ƕ\�����ďI��
 		if (!m.find()) {
 			IJ.error("Invalid file type.");
 			return null;
 		}
 
 		File f = new File(filepath);
-		// �I�������t�@�C�������݂��Ȃ���΃G���[�ƕ\�����ďI��
 		if (!f.exists()) {
 			IJ.error("File[" + filepath + "] does not exist.");
 			return null;
 		}
 
-		// �摜�t�@�C����ImagePlus�ɕϊ�
 		ImagePlus imp = new ImagePlus(filepath);
-		// �I�������t�@�C����BPP(�F�[�x�FBit Per Pixel)��32�łȂ���΃G���[�ƕ\�����ďI��
 		if (imp.getBitDepth() != 32) {
 			IJ.error("Invalid file type.");
 			return null;
@@ -469,9 +435,6 @@ public class Common implements PlugIn {
 	}
 }
 
-/**
- * �t�B���^�����O�N���X(_nnnnn.tif)
- */
 class TifFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
 
@@ -484,9 +447,6 @@ class TifFilter implements FilenameFilter {
 	}
 }
 
-/**
- * �t�B���^�����O�N���X(_nnnnnnorm.tif)
- */
 class NormalizeFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
 
@@ -499,9 +459,6 @@ class NormalizeFilter implements FilenameFilter {
 	}
 }
 
-/**
- * �t�B���^�����O�N���X(_nnnnnstitch.tif)
- */
 class StitchFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
 
@@ -514,45 +471,3 @@ class StitchFilter implements FilenameFilter {
 	}
 }
 
-/* 2016.08.12 ������s�s�̂��߁A�g�p�֎~ */
-/*
- * class calc2q_Sub implements Callable<String> {
- * 
- * private int i; private double w, max2q; private double step2q; private
- * ImagePlus imp_new; private ImagePlus imp;
- * 
- * private XRDProps prop;
- * 
- * public calc2q_Sub(int _i, double _w, double _max2q, double _step2q, ImagePlus
- * _imp_new, ImagePlus _imp) {
- * 
- * this.i = _i; this.w = _w; this.max2q = _max2q; this.step2q = _step2q;
- * this.imp_new = _imp_new; this.imp = _imp;
- * 
- * this.prop = Common.ReadProps(); }
- * 
- * public String call() { double yL2 = (i - prop.y0) * prop.pY * (i - prop.y0) *
- * prop.pY / prop.cDist / prop.cDist;
- * 
- * for (int j = 0; j < w; j++) { double xj = (max2q - Math.acos(Math.cos((max2q
- * - j * step2q) / 180 * Math.PI) * Math.sqrt(1 + yL2)) / Math.PI * 180) /
- * step2q;
- * 
- * if (!prop.roundBool) { // @@@@@<���}�l�g�p>��������
- * imp_new.getProcessor().putPixelValue(j, i,
- * imp.getProcessor().getInterpolatedValue(xj, i)); // [A]
- * // @@@@@<���}�l�g�p>�����܂�
- * 
- * } else { // @@@@@<round()�g�p>�������� imp_new.getProcessor().putPixel(j, i,
- * imp.getProcessor().getPixel((int) (Math.round(xj)), i)); //
- * imp_new.getProcessor().putPixel(j, i, //
- * imp.getProcessor().getPixelInterpolated(xj, i)); // // [B]==round
- * // @@@@@<round()�g�p>�����܂� }
- * //Common.debug(""+j+","+i+","+imp_new.getProcessor().getInterpolatedValue(j,
- * i)); } // for(j) //imp_new.getProcessor().putPixelValue(1, 62,
- * imp.getProcessor().getInterpolatedValue(1, 69)); // [A]
- * //imp_new.getProcessor().putPixelValue(1, 62, 1915.5434208759418); // [A]
- * return "";
- * 
- * } }
- */

@@ -23,7 +23,7 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 
 	public void run(String arg) {
 
-		XRDProps prop = Common.ReadProps();
+		XRDProps prop = XRDCommon.ReadProps();
 
 		DirectoryChooser dc = new DirectoryChooser("Choose directory for stitched images...");
 		if(dc.getDirectory() == null) return;
@@ -113,18 +113,13 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 
 				ImagePlus imp_sti = new ImagePlus(dirImg + strPrefix + "_" + strIdx + "stitch_vs2q.txt");
 				for(int k=0; k<z; k++) {
-					// slice 選択
 					imp_stack.setSlice(k+1);
 
 					if(!prop.roundBool){
-						// @@@@@<内挿値使用>ここから 
 						imp_stack.getProcessor().putPixelValue(j,i,imp_sti.getProcessor().getInterpolatedValue(1, k)); // [A]
-						// @@@@@<内挿値使用>ここまで
 					}else{
-						// @@@@@<round()使用>ここから
 						imp_stack.getProcessor().putPixel(j,i,imp_sti.getProcessor().getPixel((int)Math.round(1), k));
 						//imp_stack.getProcessor().putPixel(j,i,imp_sti.getProcessor().getPixelInterpolated(1, k)); // [B]
-						// @@@@@<round()使用>ここまで					
 					}
 				}
 			}

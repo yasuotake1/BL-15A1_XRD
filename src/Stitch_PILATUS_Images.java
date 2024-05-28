@@ -21,7 +21,7 @@ public class Stitch_PILATUS_Images implements PlugIn {
 
 		List<Integer> arrAngles;
 		try {
-			arrAngles = Common.getStitchAngles();
+			arrAngles = XRDCommon.getStitchAngles();
 			if(arrAngles.size() == 0) return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -29,8 +29,7 @@ public class Stitch_PILATUS_Images implements PlugIn {
 			return;
 		}
 		
-		// 設定値を取得
-		XRDProps prop = Common.ReadProps();
+		XRDProps prop = XRDCommon.ReadProps();
 
 		Double[] arrMin2q = new Double[arrAngles.size()];
 		Double[] arrMax2q = new Double[arrAngles.size()];
@@ -39,7 +38,6 @@ public class Stitch_PILATUS_Images implements PlugIn {
 		String dir = "";
 		int w;
 		int h;
-		//カメラ角数分、ループ処理
 		for(int i=0; i<arrAngles.size(); i++) {
 
 			OpenDialog od = new OpenDialog("Select image #" + String.valueOf(i + 1) + " (" + String.valueOf(arrAngles.get(i)) + " degree).", prop.defaultDir, "");
@@ -50,7 +48,7 @@ public class Stitch_PILATUS_Images implements PlugIn {
 
 			if(filepath == null ) return;
 
-			ImagePlus imp = Common.CheckTiff32BPP(filepath);
+			ImagePlus imp = XRDCommon.CheckTiff32BPP(filepath);
 			if(imp == null ) return;
 			
 			if(prop.directionInt == 2)
@@ -62,12 +60,12 @@ public class Stitch_PILATUS_Images implements PlugIn {
 			h = imp.getProcessor().getHeight();
 			h_new = h;
 
-			arrMin2q[i] = Common.getMin2q(angle, w, prop);
-			arrMax2q[i] = Common.getMax2q(angle, w, prop);
+			arrMin2q[i] = XRDCommon.getMin2q(angle, w, prop);
+			arrMax2q[i] = XRDCommon.getMax2q(angle, w, prop);
 			
 			step2q = (arrMax2q[i] - arrMin2q[i]) / w;
 			
-			arrImpIP[i] = Common.calcIP(imp, step2q, angle, prop);
+			arrImpIP[i] = XRDCommon.calcIP(imp, step2q, angle, prop);
 			
 			if(i == 0) {
 				globalMin2q = arrMin2q[i];
@@ -85,7 +83,7 @@ public class Stitch_PILATUS_Images implements PlugIn {
 			}
 		}
 		
-		Common.WriteProps(prop);
+		XRDCommon.WriteProps(prop);
 
 		int w_new = (int) Math.round((globalMax2q - globalMin2q) / step2q);
 		double globalStep2q = (globalMax2q - globalMin2q) / w_new;
@@ -125,29 +123,24 @@ public class Stitch_PILATUS_Images implements PlugIn {
 					xi = (arrMax2q[idxToUse] - (globalMax2q - globalStep2q * i)) / step2q;
 				}
 				if(!prop.roundBool){
-					// @@@@@<内挿値使用>ここから 
 					if(blend > 0) {
 						
 					}
 					imp_sti.getProcessor().putPixelValue(i,j,arrImpIP[idxToUse].getProcessor().getInterpolatedValue(xi, j)); // [A]
-					// @@@@@<内挿値使用>ここまで
 				}else{
-					// @@@@@<round()使用>ここから
 					imp_sti.getProcessor().putPixel(i,j,arrImpIP[idxToUse].getProcessor().getPixel((int)Math.round(xi), j));
 					//imp_sti.getProcessor().putPixel(i,j,arrIdIP[idxToUse].getProcessor().getPixelInterpolated(xi, j)); // [B]
-					// @@@@@<round()使用>ここまで					
 				}
 			}
 		}
-		// コントラストを調整
 		
 		FileSaver fs = new FileSaver(imp_sti);
 		fs.saveAsTiff(dir + File.separator + prefix + "_Stitched.tif");
 		(new ContrastEnhancer()).stretchHistogram(imp_sti,0.1);
 		imp_sti.show();
-		ImagePlus imp_calc2q = Common.calc2q(imp_sti, globalMin2q, globalStep2q, prop);
+		ImagePlus imp_calc2q = XRDCommon.calc2q(imp_sti, globalMin2q, globalStep2q, prop);
 		if(prop.debugBool)
 			imp_calc2q.show();
-		Common.plot2q(imp_calc2q, globalMin2q, globalStep2q, dir + File.separator, prefix + "_Stitched", true);
+		XRDCommon.plot2q(imp_calc2q, globalMin2q, globalStep2q, dir + File.separator, prefix + "_Stitched", true);
 	}
 }
