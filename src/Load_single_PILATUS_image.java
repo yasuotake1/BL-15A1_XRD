@@ -48,15 +48,19 @@ public class Load_single_PILATUS_image implements PlugIn {
 		double max2q = XRDCommon.getMax2q(angle, w, prop);
 		double step2q = (max2q - min2q) / w;
 
-		ImagePlus img_IP = XRDCommon.calcIP(imp, step2q, angle, prop);
-		if (prop.debugBool)
-			img_IP.show();
+		ImagePlus imp_IP = XRDCommon.calcIP(imp, step2q, angle, prop);
+		if (prop.debugBool) {
+			imp_IP.setTitle("IP_" + imp.getTitle());
+			imp_IP.show();
+		}
 
-		ImagePlus img_2q = XRDCommon.calc2q(img_IP, min2q, step2q, prop);
-		if (prop.debugBool)
-			img_2q.show();
+		ImagePlus imp_2q = XRDCommon.calc2q(imp_IP, min2q, step2q, prop);
+		if (prop.debugBool) {
+			imp_2q.setTitle("2q_" + imp.getTitle());
+			imp_2q.show();
+		}
 
-		XRDCommon.plot2q(img_2q, min2q, step2q, dir + File.separator, name.replace(".tif", ""), true);
+		XRDCommon.plot2q(imp_2q, min2q, step2q, dir + File.separator, name.replace(".tif", ""), true);
 
 	}
 }
