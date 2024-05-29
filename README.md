@@ -7,7 +7,7 @@ These codes still require cleaning-up, but were anyway put on public repository 
 Create a folder "[ImageJ root]/plugins/BL-15A1_XRD" and place BL-15A1_XRD.jar and XRDProps.config in it. Then restart ImageJ.
 
 # How to use
-![PILATUS 100k in gPortrait (2q increase to right)h set up](Drawing1.png)
+![PILATUS 100k in ÂgPortrait (2q increase to right)Âh set up](Drawing1.png)
 ### BL-15A1 XRD > Setup PILATUS...
 Set necessary parameters before loading XRD patterns.
 - **Pixel size X** and **Pixel size Y** are the pixel size of the detector. Default is 0.000172 m = 172 microns for PILATUS 100k.
@@ -18,6 +18,11 @@ Set necessary parameters before loading XRD patterns.
 - When converting images, interpolated pixel values are used by default. **Use round() for getPixel()** forces to use nearest neighbour pixel values (no interpolation).
 - **Cache file data** allows to store intermediate images for batch job operation.
 - With checking **Debug mode**, intermediate images will be displayed. This might also be helpful to understand how this plugin works.
-
+### BL-15A1 XRD > Load single PILATUS images...
+Select PILATUS image file, and then enter camera angle. The image is loaded and converted to XRD profile (vs. two-theta). The profile is saved as a text file: [PILATUS file name]_vs2q.txt.
+### Convert series of single PILATUS images...
+This plugin works on all .tif files in a specified directory. It does not show any camera image or profile, but saves profile text files.
+### Stitch PILATUS images...
+It stitches multiple PILATUS images for different camera angles. First, enter the number of images, and then specify the list of camera angles. The plugin askes for the image files of each camera angles. After specifying  all giles, the plugin stitches the images and converts it into XRD profile and saves as [First PILATUS images file name]_Stitched_vs2q.txt.
 # Reference
 See [Y. Takeichi et al.](https://doi.org/10.2355/isijinternational.ISIJINT-2023-215 "Y. Takeichi et al., ISIJ Int. 63, 2017 (2023).") and its supplementary materials for how this plugin is used.
