@@ -27,7 +27,7 @@ Select PILATUS image file, and then enter camera angle. The image is loaded and 
 ### Plugins > BL-15A1 XRD > Convert series of single PILATUS images...
 This plugin works on all .tif files in a specified directory. It does not show any camera image or profile, but saves profile text files.
 ### Plugins > BL-15A1 XRD > Stitch PILATUS images...
-It stitches multiple PILATUS images for different camera angles. First, enter the number of images, and then specify the list of camera angles. The plugin askes for the image files of each camera angles. After specifying  all files, the plugin stitches the images and converts it into XRD profile and saves as [First PILATUS images file name]_Stitched_vs2q.txt.
+It stitches multiple PILATUS images for different camera angles. First, enter the number of images, and then specify the list of camera angles. The plugin askes for the image files of each camera angles. After specifying  all files, the plugin stitches the images and converts it into XRD profile and saves as [First PILATUS file name]_Stitched_vs2q.txt.
 
 ![LoadSinglePilatusImages.png](resources/StitchPilatusImages.png)
 
