@@ -4,7 +4,7 @@ Using this plugin, Dectris PILATUS images of synchrotron X-ray diffraction patte
 These codes still require cleaning-up, but were anyway put on public repository to meet the requests to inspect them. 
 
 # Installation
-Download BL-15A1_XRD.jar and XRDProps.config from ![Releases](https://github.com/yasuotake1/BL-15A1_XRD/releases). Create a folder "[ImageJ root]/plugins/BL-15A1_XRD" and place those files in it. Then restart ImageJ.
+Download BL-15A1_XRD.jar and XRDProps.config from [Releases](../../releases). Create a folder "[ImageJ root]/plugins/BL-15A1_XRD" and place those files in it. Then restart ImageJ.
 
 # How to use
 ![PILATUS 100k in gPortrait (2q increase to right)h set up](Drawing1.png)
