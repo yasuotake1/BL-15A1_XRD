@@ -7,7 +7,7 @@ These codes still require cleaning-up, but were anyway put on public repository 
 Create a folder "[ImageJ root]/plugins/BL-15A1_XRD" and place BL-15A1_XRD.jar and XRDProps.config in it. Then restart ImageJ.
 
 # How to use
-
+![PILATUS 100k in gPortrait (2q increase to right)h set up](Drawing1.png)
 ### BL-15A1 XRD > Setup PILATUS...
 Set necessary parameters before loading XRD patterns.
 - **Pixel size X** and **Pixel size Y** are the pixel size of the detector. Default is 0.000172 m = 172 microns for PILATUS 100k.
