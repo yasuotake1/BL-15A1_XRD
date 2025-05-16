@@ -80,13 +80,11 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 
 		GenericDialog gd1 = new GenericDialog("I_0 Normalization...");
 		gd1.addChoice("Select a column: ", headerData, "");
-		gd1.addNumericField("Normalize to: ", 10000000, 0);
 		gd1.showDialog();
 
 		if (gd1.wasCanceled()) return;
 
 		int selectedIndex = gd1.getNextChoiceIndex();
-		int intNorm = (int) gd1.getNextNumber();
 
 		ResultsTable rt = ResultsTable.getResultsTable();
 		rt.reset();
@@ -94,6 +92,7 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 		for (int i = 0; i < mapData.size(); i++) {
 			rt.setValue("I_0", i, mapData.get(i)[selectedIndex]);
 		}
+		double intNorm=rt.getValue("I_0", 0);
 
 		File target = new File(dirImg + "normalized");
 		if (!target.exists()) {
