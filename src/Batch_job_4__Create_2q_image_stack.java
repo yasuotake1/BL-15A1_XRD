@@ -4,8 +4,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -23,10 +26,9 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 
 	public void run(String arg) {
 
-		XRDProps prop = XRDCommon.ReadProps();
-
 		DirectoryChooser dc = new DirectoryChooser("Choose directory for stitched images...");
-		if(dc.getDirectory() == null) return;
+		if (dc.getDirectory() == null)
+			return;
 
 		String dirImg = dc.getDirectory() + File.separator;
 
@@ -42,35 +44,36 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 			arrParamStr = Files.readAllLines(new File(dirImg + "log_stitched.txt").toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
-			IJ.error("Failed to read file : "+dirImg + "log_stitched.txt");
+			IJ.error("Failed to read file : " + dirImg + "log_stitched.txt");
 			return;
 		}
 
 		int i_max = 0;
-		while(! arrParamStr.get(i_max).startsWith("globalMax2q = ")){
+		while (!arrParamStr.get(i_max).startsWith("globalMax2q = ")) {
 			i_max++;
-			if(i_max == arrParamStr.size()){
+			if (i_max == arrParamStr.size()) {
 				IJ.error("Failed to load parameters!");
 				return;
 			}
 		}
 
 		String strHead = arrParamStr.get(0);
-		int idxStart,idxEnd = 0;
-		try{
+		int idxStart, idxEnd = 0;
+		try {
 			idxStart = Integer.parseInt(strHead.substring(("File index ").length(), strHead.indexOf("-")));
-			idxEnd = Integer.parseInt(strHead.substring(strHead.indexOf("-") + 1, strHead.indexOf(" for camera angle")));			
-		}catch(NumberFormatException e){
+			idxEnd = Integer
+					.parseInt(strHead.substring(strHead.indexOf("-") + 1, strHead.indexOf(" for camera angle")));
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			IJ.error("log_stitched.txt : INVALID FORMAT.");
-			return;		
+			return;
 		}
 
 		float globalMax2q = Float.parseFloat(arrParamStr.get(i_max).substring(("globalMax2q = ").length()));
-		float globalMin2q = Float.parseFloat(arrParamStr.get(i_max+1).substring(("globalMin2q = ").length()));
-		float globalStep2q = Float.parseFloat(arrParamStr.get(i_max+2).substring(("globalStep2q = ").length()));
+		float globalMin2q = Float.parseFloat(arrParamStr.get(i_max + 1).substring(("globalMin2q = ").length()));
+		float globalStep2q = Float.parseFloat(arrParamStr.get(i_max + 2).substring(("globalStep2q = ").length()));
 
-		if(Float.isNaN(globalMax2q) || Float.isNaN(globalMax2q) || Float.isNaN(globalStep2q)){
+		if (Float.isNaN(globalMax2q) || Float.isNaN(globalMax2q) || Float.isNaN(globalStep2q)) {
 			IJ.error("Failed to load parameters!");
 			return;
 		}
@@ -83,12 +86,13 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 		gd1.addNumericField("Mapping height: ", 1, 0);
 		gd1.showDialog();
 
-		if (gd1.wasCanceled()) return;
+		if (gd1.wasCanceled())
+			return;
 
-		int w = (int)gd1.getNextNumber();
-		int h = (int)gd1.getNextNumber();
+		int w = (int) gd1.getNextNumber();
+		int h = (int) gd1.getNextNumber();
 
-		if(w*h != idxEnd - idxStart +1){
+		if (w * h != idxEnd - idxStart + 1) {
 			IJ.error("Invalid mapping size!");
 			return;
 		}
@@ -100,40 +104,49 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 				return;
 			}
 		}
-		String filename = listAll[listAll.length-1].getName();
+		String filename = listAll[listAll.length - 1].getName();
 		String strPrefix = filename.substring(0, filename.lastIndexOf("_"));
-
-		int z = new ImagePlus(dirImg+File.separator+filename.replace(".tif", "_vs2q.txt")).getProcessor().getHeight();
-
-		ImagePlus imp_stack = NewImage.createImage(strPrefix + "_stack2q", w, h, z, 32, NewImage.FILL_WHITE);
-
-		for(int i=0; i<h; i++) {
-			for(int j=0; j<w; j++) {
-				String strIdx = String.format("%05d", (int)Math.floor(idxStart + w * i + j));
-
-				ImagePlus imp_sti = new ImagePlus(dirImg + strPrefix + "_" + strIdx + "stitch_vs2q.txt");
-				for(int k=0; k<z; k++) {
-					imp_stack.setSlice(k+1);
-
-					if(!prop.roundBool){
-						imp_stack.getProcessor().putPixelValue(j,i,imp_sti.getProcessor().getInterpolatedValue(1, k)); // [A]
-					}else{
-						imp_stack.getProcessor().putPixel(j,i,imp_sti.getProcessor().getPixel((int)Math.round(1), k));
-						//imp_stack.getProcessor().putPixel(j,i,imp_sti.getProcessor().getPixelInterpolated(1, k)); // [B]
+		List<String> lines;
+		ImagePlus imp_stack;
+		int z;
+		try {
+			Stream<String> _lines = Files.lines(Paths.get(dirImg + filename.replace(".tif", "_vs2q.txt")));
+			lines = _lines.filter(s -> !s.isEmpty()).collect(Collectors.toList());
+			lines.remove(0);
+			_lines.close();
+			z = lines.size();
+			imp_stack = NewImage.createImage(strPrefix + "_stack2q", w, h, z, 32, NewImage.FILL_WHITE);
+			for (int i = 0; i < z; i++) {
+				imp_stack.getStack().setSliceLabel(lines.get(i).split("[,\\s]+")[1] + "degree", i + 1);
+			}
+			for (int i = 0; i < h; i++) {
+				for (int j = 0; j < w; j++) {
+					String strIdx = String.format("%05d", (int) Math.floor(idxStart + w * i + j));
+					_lines = Files.lines(Paths.get(dirImg + strPrefix + "_" + strIdx + "stitch_vs2q.txt"));
+					lines = _lines.filter(s -> !s.isEmpty()).collect(Collectors.toList());
+					lines.remove(0);
+					_lines.close();
+					for (int k = 0; k < z; k++) {
+						imp_stack.setSlice(k + 1);
+						imp_stack.getProcessor().putPixelValue(j, i,
+								Double.parseDouble(lines.get(k).split("[,\\s]+")[2]));
 					}
 				}
+				IJ.showProgress(-i, h);
 			}
-			IJ.showProgress(-i,h);
+		} catch (IOException e) {
+			IJ.error(e.toString());
+			return;
 		}
 
 		imp_stack.getProcessor().flipVertical();
 
 		new FileSaver(imp_stack).saveAsTiff(dirImg + "stack2q" + File.separator + strPrefix + "_stack2q.tif");
-	
+
 		imp_stack.setTitle(strPrefix + "_stack2q.tif");
 		imp_stack.show();
-		
-		IJ.showStatus("Finished to create 2q image stack.");	
+
+		IJ.showStatus("Finished to create 2q image stack.");
 
 		File file = new File(dirImg + "stack2q" + File.separator + "log_stack2q.txt");
 		try {
@@ -143,7 +156,7 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 			pw.println("globalMax2q = " + String.valueOf(globalMax2q));
 			pw.println("globalMin2q = " + String.valueOf(globalMin2q));
 			pw.println("globalStep2q = " + String.valueOf(globalStep2q));
-			
+
 			pw.close();
 		} catch (IOException e) {
 			IJ.error(e.getMessage());
