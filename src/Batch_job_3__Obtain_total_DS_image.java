@@ -100,7 +100,7 @@ public class Batch_job_3__Obtain_total_DS_image implements PlugIn {
 		imp_total.setTitle(strPrefix + "_total.tif");
 		imp_total.show();
 
-		ImagePlus imp2q = XRDCommon.calc2q(imp_total, globalMax2q, globalStep2q, prop);
+		ImagePlus imp2q = XRDCommon.calc2q(imp_total, globalMin2q, globalStep2q, prop);
 		XRDCommon.plot2q(imp2q, globalMin2q, globalStep2q, dirImg + "total" + File.separator, strPrefix + "_total", true);
 
 		IJ.showStatus("Finished image integration.");
