@@ -11,6 +11,8 @@ public class XRDProps implements PlugIn{
 	public boolean roundBool;
 	public boolean debugBool;
 	public boolean cacheBool;
+	public boolean flipHor;
+	public boolean flipVer;
 	public List<Integer> arrAngles;
 	public String defaultDir;
 

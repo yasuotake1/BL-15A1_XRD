@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,10 +33,11 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 		String dirImg = "";
 
 		DirectoryChooser dc = new DirectoryChooser("Choose directory for PILATUS images...");
-		if(dc.getDirectory() == null) return;
+		if (dc.getDirectory() == null)
+			return;
 
 		dirImg = dc.getDirectory() + File.separator;
-		
+
 		File[] listAll = new File(dirImg).listFiles(new TifFilter());
 
 		if (listAll.length == 0) {
@@ -59,7 +59,7 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 			BufferedReader br = new BufferedReader(new FileReader(new File(od.getPath())));
 			String line;
 			int i_line = 0;
-			while((line = br.readLine()) != null ){
+			while ((line = br.readLine()) != null) {
 				if (i_line == 0) {
 					headerData = line.replaceAll(" ", "").split(",");
 				} else {
@@ -71,18 +71,17 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 			br.close();
 
 		} catch (NumberFormatException ex) {
-			ex.printStackTrace();
-			IJ.error("Invalid File Format. : "+od.getPath());
+			XRDCommon.errorHandling("Invalid File Format. : " + od.getPath(), ex);
 		} catch (IOException ex) {
-			ex.printStackTrace();
-			IJ.error("Failed to read file");
+			XRDCommon.errorHandling("Failed to read file", ex);
 		}
 
 		GenericDialog gd1 = new GenericDialog("I_0 Normalization...");
 		gd1.addChoice("Select a column: ", headerData, "");
 		gd1.showDialog();
 
-		if (gd1.wasCanceled()) return;
+		if (gd1.wasCanceled())
+			return;
 
 		int selectedIndex = gd1.getNextChoiceIndex();
 
@@ -92,7 +91,7 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 		for (int i = 0; i < mapData.size(); i++) {
 			rt.setValue("I_0", i, mapData.get(i)[selectedIndex]);
 		}
-		double intNorm=rt.getValue("I_0", 0);
+		double intNorm = rt.getValue("I_0", 0);
 
 		File target = new File(dirImg + "normalized");
 		if (!target.exists()) {
@@ -103,11 +102,11 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 		}
 
 		XRDProps prop = XRDCommon.ReadProps();
-		if(prop.cacheBool){
-			for(int n=0;n<listAll.length;n++){
+		if (prop.cacheBool) {
+			for (int n = 0; n < listAll.length; n++) {
 				ImagePlus work = new ImagePlus(listAll[n].getPath());
-				IJ.showProgress((n+1), listAll.length);
-				IJ.showStatus("Reading files... : "+work.getTitle());
+				IJ.showProgress((n + 1), listAll.length);
+				IJ.showStatus("Reading files... : " + work.getTitle());
 			}
 		}
 
@@ -117,41 +116,39 @@ public class Batch_job_1__I0_normalization implements PlugIn {
 
 			ImagePlus imp = new ImagePlus(dirImg + fname);
 
-			double val_d = intNorm / rt.getValue("I_0", fileIdx);
-			double value_digits4 = new BigDecimal(val_d).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+			double val = intNorm / rt.getValue("I_0", fileIdx);
 
-			imp.getProcessor().multiply(value_digits4);
+			imp.getProcessor().multiply(val);
 
 			new FileSaver(imp).saveAsTiff(dirImg + "normalized" + File.separator + fname.replace(".tif", "norm.tif"));
 
-			IJ.showProgress((i+1), listAll.length);
+			IJ.showProgress((i + 1), listAll.length);
 			IJ.showStatus(fname);
 		}
-		
+
 		IJ.showStatus("Finished I_0 normalization.");
 
-		String resultFileName = dirImg + "normalized" + File.separator + "log_normalized.txt";
+		String resultFileName = dirImg + "normalized" + File.separator + XRDCommon.fNameLogNorm;
 		try {
 			rt.saveAs(resultFileName);
 		} catch (IOException e) {
-			e.printStackTrace();
-			IJ.error("Failed to write file. : "+resultFileName);
+			XRDCommon.errorHandling("Failed to write file. : " + resultFileName, e);
 		}
 		rt.reset();
 
 		try {
-			Path src = Paths.get(resultFileName+".new");
+			Path src = Paths.get(resultFileName + ".new");
 			Path srcRename = Paths.get(resultFileName);
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(resultFileName+".new")));
-			out.write("I_0 normalization to " + String.valueOf(intNorm)+"\n");
-			for(String s : Files.readAllLines(srcRename)){
-				out.write(s+"\n");
+			BufferedWriter out = new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(resultFileName + ".new")));
+			out.write("I_0 normalization to " + String.valueOf(intNorm) + "\n");
+			for (String s : Files.readAllLines(srcRename)) {
+				out.write(s + "\n");
 			}
 			out.close();
 			Files.move(src, srcRename, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			e.printStackTrace();
-			IJ.error("Failed to write file. : "+resultFileName);
+			XRDCommon.errorHandling("Failed to write file. : " + resultFileName, e);
 		}
 	}
 }

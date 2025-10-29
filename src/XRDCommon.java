@@ -1,10 +1,12 @@
 import java.awt.Rectangle;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +28,6 @@ import ij.measure.ResultsTable;
 import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
 
-
 public class XRDCommon implements PlugIn {
 
 	public static float pX = 0.000172F;
@@ -38,10 +39,15 @@ public class XRDCommon implements PlugIn {
 	public static boolean roundBool = false;
 	public static boolean cacheBool = true;
 	public static boolean debugBool = false;
+	public static boolean flipHor = true;
+	public static boolean flipVer = true;
 	public static List<Integer> arrAngles = new ArrayList<Integer>();
 	public static String defaultDir = "";
 
-	public static String PropPath = "plugins/BL-15A1_XRD/XRDProps.config";
+	public static final String PropPath = "plugins/BL-15A1_XRD/XRDProps.config";
+	public static final String fNameLogNorm = "log_normalized.txt";
+	public static final String fNameLogStitch = "log_stitched.txt";
+	public static final String fNameLogTotal = "log_total.txt";
 
 	public void run(String arg) {
 	}
@@ -68,6 +74,8 @@ public class XRDCommon implements PlugIn {
 			target.roundBool = Boolean.parseBoolean(prop.getProperty("roundBool"));
 			target.cacheBool = Boolean.parseBoolean(prop.getProperty("cacheBool"));
 			target.debugBool = Boolean.parseBoolean(prop.getProperty("debugBool"));
+			target.flipHor = Boolean.parseBoolean(prop.getProperty("flipHor"));
+			target.flipVer = Boolean.parseBoolean(prop.getProperty("flipVer"));
 			target.arrAngles = Arrays.asList(prop.getProperty("arrAngles").replaceAll("[ \\[\\]]", "").split(","))
 					.stream().mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
 			target.defaultDir = prop.getProperty("defaultDir");
@@ -82,11 +90,13 @@ public class XRDCommon implements PlugIn {
 			target.roundBool = roundBool;
 			target.cacheBool = true;
 			target.debugBool = false;
+			target.flipHor = flipHor;
+			target.flipVer = flipVer;
 			target.arrAngles = arrAngles;
 			target.defaultDir = defaultDir;
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			errorHandling("Failed to read properties.", e);
 		}
 		return target;
 
@@ -107,21 +117,22 @@ public class XRDCommon implements PlugIn {
 		prop.setProperty("roundBool", Boolean.toString(target.roundBool));
 		prop.setProperty("cacheBool", Boolean.toString(target.cacheBool));
 		prop.setProperty("debugBool", Boolean.toString(target.debugBool));
+		prop.setProperty("flipHor", Boolean.toString(target.flipHor));
+		prop.setProperty("flipVer", Boolean.toString(target.flipVer));
 		prop.setProperty("arrAngles", Arrays.toString(target.arrAngles.toArray()));
 		prop.setProperty("defaultDir", target.defaultDir);
 		try {
 			Prefs.savePrefs(prop, XRDCommon.PropPath);
 		} catch (IOException e) {
-			IJ.error("Failed to write properties.");
+			errorHandling("Failed to write properties.", e);
 		}
 	}
 
-
 	/**
-	 * @param imp ImagePlus of the flat detector image.
+	 * @param imp    ImagePlus of the flat detector image.
 	 * @param step2q Step size in degree to calculate imaging plate pattern.
-	 * @param angle Center camera angle.
-	 * @param prop XRDProps object that contains other parameters.
+	 * @param angle  Center camera angle.
+	 * @param prop   XRDProps object that contains other parameters.
 	 * @return ImagePlus of imaging plate pattern.
 	 */
 	public static ImagePlus calcIP(ImagePlus imp, double step2q, double angle, XRDProps prop) {
@@ -156,12 +167,11 @@ public class XRDCommon implements PlugIn {
 		return imp_new;
 	}
 
-
 	/**
-	 * @param imp ImagePlus of imaging plate pattern.
-	 * @param min2q Minimum two-theta angle in degree.
+	 * @param imp    ImagePlus of imaging plate pattern.
+	 * @param min2q  Minimum two-theta angle in degree.
 	 * @param step2q Step size in degree.
-	 * @param prop XRDProps object that contains other parameters.
+	 * @param prop   XRDProps object that contains other parameters.
 	 * @return
 	 */
 	public static ImagePlus calc2q(ImagePlus imp, double min2q, double step2q, XRDProps prop) {
@@ -235,7 +245,7 @@ public class XRDCommon implements PlugIn {
 	 * @param step2q
 	 * @param dir
 	 * @param nameStrip Stripped file name.
-	 * @param bShow Boolean if the plot window is shown.
+	 * @param bShow     Boolean if the plot window is shown.
 	 */
 	public static void plot2q(ImagePlus imp, double min2q, double step2q, String dir, String nameStrip, boolean bShow) {
 		ResultsTable rt = ResultsTable.getResultsTable();
@@ -259,8 +269,7 @@ public class XRDCommon implements PlugIn {
 		try {
 			rt.saveAs(dir + nameStrip + "_vs2q.txt");
 		} catch (IOException e) {
-			e.printStackTrace();
-			IJ.error("Failed to write file. : " + dir + nameStrip + "_vs2q.txt");
+			errorHandling("Failed to write file. : " + dir + nameStrip + "_vs2q.txt", e);
 		}
 		rt.reset();
 		return;
@@ -408,7 +417,8 @@ public class XRDCommon implements PlugIn {
 
 	/**
 	 * @param filepath
-	 * @return ImagePlus loaded from filepath or null if it is not a 32-bit Tiff file or does not exist.
+	 * @return ImagePlus loaded from filepath or null if it is not a 32-bit Tiff
+	 *         file or does not exist.
 	 */
 	public static ImagePlus CheckTiff32BPP(String filepath) {
 
@@ -432,6 +442,24 @@ public class XRDCommon implements PlugIn {
 			return null;
 		}
 		return imp;
+	}
+
+	/**
+	 * Prints the stack trace of the Exception e to Log window. Also shows a message
+	 * box if s is not empty.
+	 * 
+	 * @param s String to show in a message box.
+	 * @param e Exception
+	 */
+	public static void errorHandling(String s, Exception e) {
+		CharArrayWriter caw = new CharArrayWriter();
+		PrintWriter pw = new PrintWriter(caw);
+		e.printStackTrace(pw);
+		IJ.log(IJ.getInstance().getInfo() + "\n" + caw.toString());
+		if (s != null && !s.isEmpty()) {
+			IJ.log(s);
+			IJ.error(s + "\nSee \"Log\" window for detail.");
+		}
 	}
 }
 
@@ -470,4 +498,3 @@ class StitchFilter implements FilenameFilter {
 		return false;
 	}
 }
-

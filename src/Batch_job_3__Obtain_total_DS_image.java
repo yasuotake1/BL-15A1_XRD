@@ -40,10 +40,10 @@ public class Batch_job_3__Obtain_total_DS_image implements PlugIn {
 
 		List<String> arrParamStr = new ArrayList<String>();
 		try {
-			arrParamStr = Files.readAllLines(new File(dirImg + "log_stitched.txt").toPath());
+			arrParamStr = Files.readAllLines(new File(dirImg + XRDCommon.fNameLogStitch).toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
-			IJ.error("Failed to read file : "+dirImg + "log_stitched.txt");
+			IJ.error("Failed to read file : "+dirImg + XRDCommon.fNameLogStitch);
 			return;
 		}
 
@@ -105,7 +105,7 @@ public class Batch_job_3__Obtain_total_DS_image implements PlugIn {
 
 		IJ.showStatus("Finished image integration.");
 
-		File file = new File(dirImg + "total" + File.separator + "log_total.txt");
+		File file = new File(dirImg + "total" + File.separator + XRDCommon.fNameLogTotal);
 		try {
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 

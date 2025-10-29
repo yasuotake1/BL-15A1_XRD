@@ -25,7 +25,6 @@ public class Stitch_PILATUS_Images implements PlugIn {
 			if (arrAngles.size() == 0)
 				return;
 		} catch (Exception e) {
-			e.printStackTrace();
 			IJ.error(e.getMessage());
 			return;
 		}

@@ -189,7 +189,7 @@ public class Batch_job_2__Stitch_images implements PlugIn {
 
 		IJ.showStatus("Finished image stitching.");
 
-		File file = new File(dirImg + "stitched" + File.separator + "log_stitched.txt");
+		File file = new File(dirImg + "stitched" + File.separator + XRDCommon.fNameLogStitch);
 		try {
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 

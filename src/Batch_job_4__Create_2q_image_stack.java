@@ -39,12 +39,13 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 			return;
 		}
 
+		XRDProps prop = XRDCommon.ReadProps();
+
 		List<String> arrParamStr = new ArrayList<String>();
 		try {
-			arrParamStr = Files.readAllLines(new File(dirImg + "log_stitched.txt").toPath());
+			arrParamStr = Files.readAllLines(new File(dirImg + XRDCommon.fNameLogStitch).toPath());
 		} catch (IOException e) {
-			e.printStackTrace();
-			IJ.error("Failed to read file : " + dirImg + "log_stitched.txt");
+			XRDCommon.errorHandling("Failed to read file : " + XRDCommon.fNameLogStitch, e);
 			return;
 		}
 
@@ -64,8 +65,7 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 			idxEnd = Integer
 					.parseInt(strHead.substring(strHead.indexOf("-") + 1, strHead.indexOf(" for camera angle")));
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			IJ.error("log_stitched.txt : INVALID FORMAT.");
+			XRDCommon.errorHandling("INVALID FORMAT : " + XRDCommon.fNameLogStitch, e);
 			return;
 		}
 
@@ -135,11 +135,22 @@ public class Batch_job_4__Create_2q_image_stack implements PlugIn {
 				IJ.showProgress(-i, h);
 			}
 		} catch (IOException e) {
-			IJ.error(e.toString());
+			XRDCommon.errorHandling("Failed to load \"_vs2q.txt\" files.", e);
 			return;
 		}
 
-		imp_stack.getProcessor().flipVertical();
+		if (prop.flipHor) {
+			for (int i = 0; i < imp_stack.getNSlices(); i++) {
+				imp_stack.setSlice(i + 1);
+				imp_stack.getProcessor().flipHorizontal();
+			}
+		}
+		if (prop.flipVer) {
+			for (int i = 0; i < imp_stack.getNSlices(); i++) {
+				imp_stack.setSlice(i + 1);
+				imp_stack.getProcessor().flipVertical();
+			}
+		}
 
 		new FileSaver(imp_stack).saveAsTiff(dirImg + "stack2q" + File.separator + strPrefix + "_stack2q.tif");
 
